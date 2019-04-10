@@ -8,3 +8,6 @@
 * `@ConfigurationProperties`
   * 设置属性的信息 如`prefix`就是前缀
   
+* `@PathVariable`
+  * 可以获取`RESTful`风格的`Uri`路径上的参数。
+  

@@ -1,2 +1,38 @@
 server:
   port: 8081
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://127.0.0.1:3306/test?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    #    hikari 参数配置
+    hikari:
+      # 是否自动提交
+      auto-commit: true
+      # 如果在没有连接可用的情况下超过此时间，则将抛出SQLException
+      connection-timeout: 30000
+      # 控制允许连接在池中空闲的最长时间
+      idle-timeout: 600000
+      # 控制池中连接的最长生命周期。使用中的连接永远不会退役，只有当它关闭时才会被删除
+      max-lifetime: 1800000
+      # 数据库连接名称
+      pool-name: boot-hikari
+      # 如果您的驱动程序支持JDBC4，强烈建议不要设置此属性
+      #      connection-test-query: select 1
+      # 控制HikariCP尝试在池中维护的最小空闲连接数。建议不要设置此值，而是允许HikariCP充当固定大小的连接池。 默认值：与maximumPoolSize相同
+      #      minimum-idle: 10
+      # 此属性控制允许池到达的最大大小，包括空闲和正在使用的连接。
+      maximum-pool-size: 10
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: false

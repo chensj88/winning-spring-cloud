@@ -11,6 +11,10 @@ my:
 spring:
   profiles:
     active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update # update 自动更新表结构 create 存在则删除重新创建
+    show-sql: true # 显示SQL
 # 运行状态监控
 management:
 #  服务端口
