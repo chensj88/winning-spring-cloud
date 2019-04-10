@@ -1,7 +1,9 @@
 package com.winning.devops.boot;
 
+import com.alibaba.fastjson.JSON;
 import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.Job;
+import com.offbytwo.jenkins.model.JobWithDetails;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +33,7 @@ public class JenkinsTest {
         for (String s : jobs.keySet()) {
             System.out.println(s+":"+jobs.get(s));
         }
+        JobWithDetails job = jobs.get("mbk-java").details();
+        System.out.println(JSON.toJSONString(job));
     }
 }
