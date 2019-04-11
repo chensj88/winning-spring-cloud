@@ -13,3 +13,6 @@ eureka:
     service-url:
       # 默认访问地址
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+spring:
+  application:
+    name: eureka-server
