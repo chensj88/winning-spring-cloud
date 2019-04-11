@@ -6,6 +6,13 @@ eureka:
     register-with-eureka: true
     ### 检索服务信息
     fetch-registry: true
+    region: ch-east-1
+  instance:
+    hostname: localhost
+    # 配置状态监控页面
+    status-page-url: http://${eureka.instance.hostname:localhost}:${management.port:8088}${management.context-path:/monitor}${endpoints.info.path:/info}
+    # 配置健康监控页面
+    health-check-url: http://${eureka.instance.hostname:localhost}:${management.port:8088}${management.context-path:/monitor}${endpoints.health.path:/health}
 ### 服务启动端口号
 server:
   port: 8100
@@ -15,9 +22,16 @@ spring:
     name: eureka-client
 # 监控配置
 management:
+  # 指定监控上下文 避免在management.endpoints.web.base-path 无法再instance中配置
+  context-path: /monitor
+  # 指定监控端口 避免在management.server.port 无法在instance中配置
+  port: 8088
+  # 指定服务显示页面端口
+  server:
+    port: 8088
   endpoints:
     web:
-#     默认监控前缀
+      #     默认监控前缀
       base-path: /monitor
       exposure:
         # 包含端点

@@ -229,3 +229,92 @@ private void initScheduledTasks() {
     }
 ```
 
+​	再来跟踪 Eureka server端的代码，在Maven的 org.springframework.cloud:spring-cloud-netflix-eureka-server:2.1.0.RELEASE包下，在org.springframework.cloud.netflix.eureka.server会发现有一 个`EurekaServerBootstrap`的类，` EurekaServerBootstrap`类在程序启动时具有最先初始化的权利，代码如下
+
+```java
+protected void initEurekaServerContext() throws Exception {
+		// For backward compatibility
+		JsonXStream.getInstance().registerConverter(new V1AwareInstanceInfoConverter(),
+				XStream.PRIORITY_VERY_HIGH);
+		XmlXStream.getInstance().registerConverter(new V1AwareInstanceInfoConverter(),
+				XStream.PRIORITY_VERY_HIGH);
+
+		if (isAws(this.applicationInfoManager.getInfo())) {
+			this.awsBinder = new AwsBinderDelegate(this.eurekaServerConfig,
+					this.eurekaClientConfig, this.registry, this.applicationInfoManager);
+			this.awsBinder.start();
+		}
+
+		EurekaServerContextHolder.initialize(this.serverContext);
+
+		log.info("Initialized server context");
+
+		// Copy registry from neighboring eureka node
+		int registryCount = this.registry.syncUp();
+    	// com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl#openForTraffic
+		this.registry.openForTraffic(this.applicationInfoManager, registryCount);
+
+		// Register all monitoring statistics.
+        // 注册需要监听的事件
+		EurekaMonitors.registerAllStats();
+	}
+```
+
+`com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl#openForTraffic`,接下来将进行如下的操作：
+
+1. 将会统计当前会续约(Renews)的客户端数(`this.expectedNumberOfClientsSendingRenews = count;`),当前为1（Eureka Server也是一个Client）
+2. 更新续约的定时任务的时间(`updateRenewsPerMinThreshold();`)
+3. 判断当前是否是Amazon AWS
+4. 设置当前实例状态为`UP`
+5. 执行`super.postInit();` `com.netflix.eureka.registry.AbstractInstanceRegistry#postInit`
+6. 执行如下代码
+
+```java
+ protected void postInit() {
+        renewsLastMin.start();
+        if (evictionTaskRef.get() != null) {
+            evictionTaskRef.get().cancel();
+        }
+        evictionTaskRef.set(new EvictionTask());
+        evictionTimer.schedule(evictionTaskRef.get(),
+                serverConfig.getEvictionIntervalTimerInMs(),
+                serverConfig.getEvictionIntervalTimerInMs());
+    }
+```
+
+7. 注册需要监听的事件
+
+```java
+EurekaMonitors.registerAllStats();
+```
+
+
+
+在`EurekaServerBootstrap`被调用的地方在`org.springframework.cloud.netflix.eureka.server.EurekaServerInitializerConfiguration#start`被调用
+
+```java
+public void start() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					//TODO: is this class even needed now?
+					eurekaServerBootstrap.contextInitialized(EurekaServerInitializerConfiguration.this.servletContext);
+					log.info("Started Eureka Server");
+					// 监听事件
+					publish(new EurekaRegistryAvailableEvent(getEurekaServerConfig()));
+					EurekaServerInitializerConfiguration.this.running = true;
+                    // 监听事件
+					publish(new EurekaServerStartedEvent(getEurekaServerConfig()));
+				}
+				catch (Exception ex) {
+					// Help!
+					log.error("Could not initialize Eureka servlet context", ex);
+				}
+			}
+		}).start();
+	}
+```
+
+
+
