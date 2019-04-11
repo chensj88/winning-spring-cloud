@@ -263,10 +263,19 @@ protected void initEurekaServerContext() throws Exception {
 `com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl#openForTraffic`,接下来将进行如下的操作：
 
 1. 将会统计当前会续约(Renews)的客户端数(`this.expectedNumberOfClientsSendingRenews = count;`),当前为1（Eureka Server也是一个Client）
+
 2. 更新续约的定时任务的时间(`updateRenewsPerMinThreshold();`)
+
 3. 判断当前是否是Amazon AWS
+
 4. 设置当前实例状态为`UP`
+
 5. 执行`super.postInit();` `com.netflix.eureka.registry.AbstractInstanceRegistry#postInit`
+
+   > 注意：注册客户端的方法也在这里`com.netflix.eureka.registry.AbstractInstanceRegistry#register`
+   >
+   > com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl#register
+
 6. 执行如下代码
 
 ```java
@@ -287,8 +296,6 @@ protected void initEurekaServerContext() throws Exception {
 ```java
 EurekaMonitors.registerAllStats();
 ```
-
-
 
 在`EurekaServerBootstrap`被调用的地方在`org.springframework.cloud.netflix.eureka.server.EurekaServerInitializerConfiguration#start`被调用
 
@@ -315,6 +322,16 @@ public void start() {
 		}).start();
 	}
 ```
+
+注册客户端
+
+EurekaServer处理：
+
+PeerReplicationResource.batchReplication()-->PeerReplicationResource.dispatch()-->判断类型
+
+PeerReplicationResource.handleRegister()-->ApplicationResource.addInstance()-->注册PeerAwareInstanceRegistry.register()-->InstanceRegistry.register()-->PeerAwareInstanceRegistryImpl。register()-->AbstractInstanceRegistry.register() 注册成功
+
+
 
 
 
