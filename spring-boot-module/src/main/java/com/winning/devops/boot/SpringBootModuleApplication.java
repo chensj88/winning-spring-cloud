@@ -3,6 +3,10 @@ package com.winning.devops.boot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author chensj
+ * @title boot module main entry
+ */
 @SpringBootApplication
 public class SpringBootModuleApplication {
 

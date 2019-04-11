@@ -13,3 +13,19 @@ server:
 spring:
   application:
     name: eureka-client
+# 监控配置
+management:
+  endpoints:
+    web:
+#     默认监控前缀
+      base-path: /monitor
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+    info:
+      head: ${spring.application.name}
+      body: Welcome, this is ${spring.application.name} @ ${server.port}
