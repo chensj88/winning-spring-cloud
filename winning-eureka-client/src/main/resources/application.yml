@@ -6,13 +6,20 @@ eureka:
     register-with-eureka: true
     ### 检索服务信息
     fetch-registry: true
+    # 注册区域，AWS使用
     region: ch-east-1
+    healthcheck:
+      # 健康检查 开启
+      enabled: true
   instance:
     hostname: localhost
+#    下面三个参数，是客户端发布给服务端
     # 配置状态监控页面
     status-page-url: http://${eureka.instance.hostname:localhost}:${management.port:8088}${management.context-path:/monitor}${endpoints.info.path:/info}
     # 配置健康监控页面
     health-check-url: http://${eureka.instance.hostname:localhost}:${management.port:8088}${management.context-path:/monitor}${endpoints.health.path:/health}
+    # 主界面
+    home-page-url: http://${eureka.instance.hostname:localhost}:${server.port:8100}/
 ### 服务启动端口号
 server:
   port: 8100

@@ -100,7 +100,7 @@ DiscoveryManager.getinstance().shutdownComponent();
 
 ​	Eureka Client向Eureka Server注册， 将自己的客户端信息提交给 Eureka Server。然后，Eureka Client通过向 Eureka Server 发送心跳（每 30 次）来续约服务。如果某个客户端不能持续续约，那Eureka Server 判定该客户端不可用，该不可用的客户端将在大约 90 秒后从Eureka Server服务注册列表中删除。服务注册列表信息和服务续约信息会被复制到集群中的每个Eureka Server节点。来自任何区域的Eureka Client 都可以获取整个系统的服务注册列表信息，根据这些注 列表信息，Application Client 可以远程调用Applicaton Service 来消费服务。
 
-### 3.3 Registe 服务注册
+### 3.3 Register 服务注册
 
 ​	服务注册，即Eureka Client向Eureka Server 提交自己的服务信息，包括 IP 地址、端口、Serviceld 等信息。如果 Eureka Client 置文件中没有配置 Serviceld ，则默认为配置文件中配置的服务名 ，即`$ {spring application.name ｝`的值。
 
@@ -331,7 +331,149 @@ PeerReplicationResource.batchReplication()-->PeerReplicationResource.dispatch()-
 
 PeerReplicationResource.handleRegister()-->ApplicationResource.addInstance()-->注册PeerAwareInstanceRegistry.register()-->InstanceRegistry.register()-->PeerAwareInstanceRegistryImpl。register()-->AbstractInstanceRegistry.register() 注册成功
 
+### 3.4 与InstanceRegistry相关的接口
+
+**注册表 InstanceRegistry 的类关系**，为后文的**应用实例注册发现**、**Eureka-Server 集群复制**做整体的铺垫
+
+![类图](http://static.iocoder.cn/images/Eureka/2018_05_21/01.png)
 
 
 
 
+
+- ``com.netflix.eureka.registry.AwsInstanceRegistry``，主要用于亚马逊 AWS，跳过。
+- `com.netflix.eureka.registry.RemoteRegionRegistry`，笔者暂时不太理解它的用途。目前猜测 Eureka-Server 集群和集群之间的注册信息的交互方式。查阅官方资料，[《Add ability to retrieve instances from any remote region》](https://github.com/Netflix/eureka/issues/29) 在做了简单介绍。翻看目前网络上的博客、书籍、项目实战，暂时都没提及此块。估摸和亚马逊 AWS 跨区域( `region` ) 机制有一定关系，先暂时跳过。有了解此块的同学，麻烦告知下笔者，万分感谢。TODO[0009]：RemoteRegionRegistry。
+- **蓝框**部分，本文主角。
+
+#### 3.4.1 LookupService
+
+`com.netflix.discovery.shared.LookupService`，查找服务**接口**，提供**简单单一**的方式获取应用集合
+
+(`com.netflix.discovery.shared.Applications`) 和 应用实例信息集合( `com.netflix.appinfo.InstanceInfo` )。接口代码如下：
+
+
+
+```java
+public interface LookupService<T> {
+
+    Application getApplication(String appName);
+    
+    Applications getApplications();
+    
+    List<InstanceInfo> getInstancesById(String id);
+    
+    InstanceInfo getNextServerFromEureka(String virtualHostname, boolean secure);
+
+}
+```
+
+![](http://static.iocoder.cn/images/Eureka/2018_04_29/01.png)
+
+- 在 Eureka-Client 里，EurekaClient 继承该接口。
+- 在 Eureka-Server 里，`com.netflix.eureka.registry.InstanceRegistry` 继承该接口。
+
+#### 3.4.2 LeaseManager
+
+`com.netflix.eureka.lease.LeaseManager`，租约管理器**接口**，提供租约的注册、续租、取消( 主动下线 )、过期( 过期下线 )。接口代码如下：
+
+```java
+public interface LeaseManager<T> {
+
+    void register(T r, int leaseDuration, boolean isReplication);
+    
+    boolean cancel(String appName, String id, boolean isReplication);
+    
+    boolean renew(String appName, String id, boolean isReplication);
+    
+    void evict();
+    
+}
+```
+
+
+
+#### 3.4.3 InstanceRegistry
+
+`com.netflix.eureka.registry.InstanceRegistry`，**应用实例**注册表**接口**。它继承了 LookupService 、LeaseManager 接口，提供应用实例的**注册**与**发现**服务。另外，它结合实际业务场景，定义了**更加丰富**的接口方法。接口代码如下：
+
+```java
+public interface InstanceRegistry extends LeaseManager<InstanceInfo>, LookupService<String> {
+
+    // ====== 开启与关闭相关 ======
+
+    void openForTraffic(ApplicationInfoManager applicationInfoManager, int count);
+    
+    void shutdown();
+    
+    void clearRegistry();
+
+    // ====== 应用实例状态变更相关 ======
+    
+    void storeOverriddenStatusIfRequired(String appName, String id, InstanceStatus overriddenStatus);
+
+    boolean statusUpdate(String appName, String id, InstanceStatus newStatus,
+                         String lastDirtyTimestamp, boolean isReplication);
+
+    boolean deleteStatusOverride(String appName, String id, InstanceStatus newStatus,
+                                 String lastDirtyTimestamp, boolean isReplication);
+
+    Map<String, InstanceStatus> overriddenInstanceStatusesSnapshot();
+
+    // ====== 响应缓存相关 ======
+
+    void initializedResponseCache();
+
+    ResponseCache getResponseCache();
+    
+    // ====== 自我保护模式相关 ======
+    
+    long getNumOfRenewsInLastMin();
+
+    int getNumOfRenewsPerMinThreshold();
+
+    int isBelowRenewThresold();
+    
+    boolean isSelfPreservationModeEnabled();
+    
+    public boolean isLeaseExpirationEnabled();
+    
+    // ====== 调试/监控相关 ======
+    List<Pair<Long, String>> getLastNRegisteredInstances();
+
+    List<Pair<Long, String>> getLastNCanceledInstances();
+}
+```
+
+#### 3.4.4 AbstractInstanceRegistry
+
+`com.netflix.eureka.registry.AbstractInstanceRegistry`，应用对象注册表**抽象实现**。
+
+这里先不拓展开，[《Eureka 源码解析 —— 应用实例注册发现》系列](http://www.iocoder.cn/categories/Eureka/?self) 逐篇分享。
+
+
+
+#### 3.4.5 PeerAwareInstanceRegistry
+
+`com.netflix.eureka.registry.PeerAwareInstanceRegistry`，PeerAware ( 暂时找不到合适的翻译 ) 应用对象注册表**接口**，提供 Eureka-Server 集群内注册信息的**同步**服务。接口代码如下：
+
+```java
+public interface PeerAwareInstanceRegistry extends InstanceRegistry {
+
+    void init(PeerEurekaNodes peerEurekaNodes) throws Exception;
+    
+    int syncUp();
+    
+    boolean shouldAllowAccess(boolean remoteRegionRequired);
+
+    void register(InstanceInfo info, boolean isReplication);
+
+    void statusUpdate(final String asgName, final ASGResource.ASGStatus newStatus, final boolean isReplication);
+}
+
+```
+
+#### 3.4.6 PeerAwareInstanceRegistryImpl
+
+`com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl`，PeerAware ( 暂时找不到合适的翻译 ) 应用对象注册表**实现类**。
+
+这里先不拓展开，[《Eureka 源码解析 —— Eureka-Server 集群》系列](http://www.iocoder.cn/categories/Eureka/?self) 逐篇分享。
