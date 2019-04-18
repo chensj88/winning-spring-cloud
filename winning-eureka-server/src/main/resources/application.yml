@@ -13,6 +13,12 @@ eureka:
     service-url:
       # 默认访问地址
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+  dashboard:
+     path: /eureka/server
 spring:
   application:
     name: eureka-server
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
