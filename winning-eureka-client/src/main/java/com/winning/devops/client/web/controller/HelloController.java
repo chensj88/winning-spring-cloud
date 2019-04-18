@@ -1,5 +1,10 @@
 package com.winning.devops.client.web.controller;
 
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,8 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
+    /** logger */
+    private static final Logger logger = LoggerFactory.getLogger(HelloController.class);
+
     @Value("${server.port}")
     private int port;
+    @Value("${spring.application.name}")
+    private String applicationName;
+
+    @Autowired
+    private EurekaClient eurekaClient;
 
     /**
      * 测试hi接口
@@ -25,6 +38,9 @@ public class HelloController {
      */
     @GetMapping(value = "hi")
     public String h1(@RequestParam String name){
+        // 获取Eureka Client 信息
+        InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka(applicationName.toUpperCase(), false);
+        logger.info(instanceInfo.getHomePageUrl());
         return  "h1," + name + ", i'm from port" + port;
     }
 }
