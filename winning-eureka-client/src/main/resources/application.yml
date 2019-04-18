@@ -28,7 +28,7 @@ eureka:
 ### 服务启动端口号
 server:
   port: 8100
-##服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
 spring:
   application:
     name: eureka-client
@@ -45,7 +45,7 @@ management:
     port: 8088
   endpoints:
     web:
-      #     默认监控前缀
+      # 默认监控前缀
       base-path: /monitor
       exposure:
         # 包含端点
