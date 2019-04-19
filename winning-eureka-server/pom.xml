@@ -6,9 +6,10 @@
         <groupId>com.winning.devops</groupId>
         <artifactId>winning-spring-cloud</artifactId>
         <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>winning-eureka-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>winning-eureka-server</name>
     <description>Eureka Server project for Spring Boot</description>
 
