@@ -54,6 +54,7 @@ management:
   endpoint:
     shutdown:
       enabled: false
-    info:
-      head: ${spring.application.name}
-      body: Welcome, this is ${spring.application.name} @ ${server.port}
+# 显示info Endpoint信息
+info:
+  head: ${spring.application.name}
+  body: Welcome, this is ${spring.application.name} @ ${server.port}
