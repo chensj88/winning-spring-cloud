@@ -29,8 +29,63 @@
   > `@EnableEurekaClient`基于`spring-cloud-netflix`。
   > 其实用更简单的话来说，就是如果选用的注册中心是`eureka`，那么就推荐`@EnableEurekaClient`，
   > 如果是其他的注册中心，那么推荐使用`@EnableDiscoveryClient`。
-  
-   
+
+* `@Import(EurekaServerInitializerConfiguration.class)`
+
+  * 将标记的class注入到spring IOC容器中
+
+  * 只能注解在类上，以及唯一的参数value上可以配置3种类型的值Configuration，ImportSelector，ImportBeanDefinitionRegistrar
+
+    * **基于Configuration也就是直接填对应的class数组**
+
+      ```java 
+      @Import({Square.class,Circular.class})
+      ```
+
+    * **基于自定义ImportSelector的使用**
+
+      ```java
+      /**
+       * 定义一个我自己的ImportSelector
+       *
+       * @author zhangqh
+       * @date 2018年5月1日
+       */
+      public class MyImportSelector implements  ImportSelector{
+          public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+              return new String[]{"com.zhang.bean.Triangle"};
+          }
+      }
+      
+      // 使用@Import
+      @Import({Square.class,Circular.class,MyImportSelector.class})
+      ```
+
+    * **基于ImportBeanDefinitionRegistrar的使用**
+
+    ```java
+    /**
+     * 定义一个自定的ImportBeanDefinitionRegistrar
+     *
+     * @author zhangqh
+     * @date 2018年5月1日
+     */
+    public class MyImportBeanDefinitionRegistrar  implements ImportBeanDefinitionRegistrar{
+        public void registerBeanDefinitions(
+                AnnotationMetadata importingClassMetadata,
+                BeanDefinitionRegistry registry) {
+            // new一个RootBeanDefinition
+            RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(Rectangle.class);
+            // 注册一个名字叫rectangle的bean
+            registry.registerBeanDefinition("rectangle", rootBeanDefinition);
+        }
+    }
+    
+    // 使用@Import
+    @Import({Square.class,Circular.class,MyImportSelector.class,MyImportBeanDefinitionRegistrar.class})
+    ```
+
+    
 ## 二、坑点
 
 ### 1、`eureka client` 使用如下配置时，启动后会自动关闭

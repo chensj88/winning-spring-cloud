@@ -26,6 +26,7 @@
         <module>spring-boot-module</module>
         <module>winning-eureka-server</module>
         <module>winning-eureka-client</module>
+        <module>winning-eureka-hystrix</module>
     </modules>
 
     <dependencies>
