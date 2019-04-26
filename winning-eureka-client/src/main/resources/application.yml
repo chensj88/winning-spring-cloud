@@ -25,9 +25,6 @@ eureka:
     #health-check-url: http://${eureka.instance.hostname}:${management.server.port}${management.endpoints.web.base-path}/health
     # 设置Instance ID
     # instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
-### 服务启动端口号
-server:
-  port: 8100
 # 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
 spring:
   application:
@@ -40,9 +37,9 @@ spring:
       additional-paths: src/main/java
 # 监控配置
 management:
-  server:
+  #server:
     # 监控服务页面端口
-    port: 8088
+    #port: 8088
   endpoints:
     web:
       # 默认监控前缀
@@ -54,6 +51,6 @@ management:
   endpoint:
     shutdown:
       enabled: false
-info:
-    head: ${spring.application.name}
-    body: Welcome, this is ${spring.application.name} @ ${server.port}
+    info:
+      head: ${spring.application.name}
+      body: Welcome, this is ${spring.application.name} @ ${server.port}
