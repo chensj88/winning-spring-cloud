@@ -40,13 +40,13 @@ spring:
       additional-paths: src/main/java
 # 监控配置
 management:
-  #  server:
-  #    # 监控服务页面端口
-  #    port: 8088
+#  server:
+#      # 监控服务页面端口
+#    port: ${server.port}
   endpoints:
     web:
       # 默认监控前缀
-      #      base-path: /monitor
+#      base-path: /actuator
       exposure:
         # 包含端点
         include: "*"
@@ -55,5 +55,23 @@ management:
     shutdown:
       enabled: false
 info:
-  head: ${spring.application.name}
-  body: Welcome, this is ${spring.application.name} @ ${server.port}
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+# feign 使用 Hystrix
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+#ribbon:
+#  ConnectTimeout: 60000
+#  ReadTimeout: 60000

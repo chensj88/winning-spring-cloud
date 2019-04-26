@@ -1,3 +1,5 @@
+server:
+  port: 8500
 eureka:
   client:
     service-url:
@@ -28,7 +30,7 @@ eureka:
 # 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
 spring:
   application:
-    name: eureka-client
+    name: eureka-zuul
   devtools:
     restart:
       # 热部署生效
@@ -59,3 +61,70 @@ info:
       target: 1.8
     head: ${spring.application.name}
     body: Welcome, this is ${spring.application.name} @ ${server.port}
+zuul:
+  routes:
+    hiapi:
+      path: /hiapi/**
+      serviceId: eureka-client
+    ribbonapi:
+      path: /ribbonapi/**
+      serviceId: eureka-ribbon
+    feignapi:
+      path: /feignapi/**
+      serviceId: eureka-feign
+  # 版本号 访问的地址就是 http://localhost:8500/v1/hiapi/hi/admin
+  prefix: /v1
+  # 设置超时时间
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+    max-total-connections: 500
+#熔断机制超时
+hystrix:
+  command:
+    default:
+      excution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeout-in-milliseconds: 60000
+#    使用默认的熔断器处理请求问题
+    hiapi:
+      excution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeout-in-milliseconds: 60000
+    ribbonapi:
+      excution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeout-in-milliseconds: 60000
+    feignapi:
+      excution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeout-in-milliseconds: 60000
+# 配置失效时间
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+#    hiapi-v:
+#      path: /hiapiv/**
+#      serviceId: hiapi-v
+## 在指定url的时候，还需要使用负载均衡的时候，那么就需要自己维护负载均衡注册列表
+## 将ribbon.eureka.enabled 改为 false
+#ribbon:
+#  eureka:
+#    enabled: false
+## 配置负载均衡的url
+#hiapi-v:
+#  ribbon:
+#    listOfServers: http://localhost:8101,http://localhost:8102
+

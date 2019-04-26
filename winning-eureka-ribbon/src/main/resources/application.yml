@@ -55,5 +55,13 @@ management:
     shutdown:
       enabled: false
 info:
-  head: ${spring.application.name}
-  body: Welcome, this is ${spring.application.name} @ ${server.port}
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+#ribbon:
+#  ReadTimeout: 60000
+#  ConnectTimeout: 60000
