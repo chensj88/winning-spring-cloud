@@ -27,6 +27,8 @@
         <module>winning-eureka-server</module>
         <module>winning-eureka-client</module>
         <module>winning-eureka-hystrix</module>
+        <module>winning-eureka-ribbon</module>
+        <module>winning-eureka-feign</module>
     </modules>
 
     <dependencies>
