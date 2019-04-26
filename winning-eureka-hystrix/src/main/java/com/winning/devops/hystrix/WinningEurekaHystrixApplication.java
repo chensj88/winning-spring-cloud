@@ -1,7 +1,8 @@
 package com.winning.devops.hystrix;
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 
 /**
@@ -14,7 +15,7 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 public class WinningEurekaHystrixApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WinningEurekaHystrixApplication.class, args);
+        new SpringApplicationBuilder(WinningEurekaHystrixApplication.class).web(WebApplicationType.SERVLET).run(args);
     }
 
 }
