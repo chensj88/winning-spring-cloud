@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,14 +34,14 @@ public class HelloController {
 
     /**
      * 测试hi接口
-     * @param name
+     * @param username
      * @return
      */
-    @GetMapping(value = "hi")
-    public String h1(@RequestParam String name){
+    @GetMapping(value = "/hi/{username}")
+    public String h1(@PathVariable String username){
         // 获取Eureka Client 信息
         InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka(applicationName.toUpperCase(), false);
         logger.info(instanceInfo.getHomePageUrl());
-        return  "h1," + name + ", i'm from port" + port;
+        return  "h1," + username + ", i'm from port @" + port;
     }
 }
