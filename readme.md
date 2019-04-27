@@ -2980,3 +2980,162 @@ public class TokenFilter extends ZuulFilter {
 
 ### 8.1 `Config Server`从本地读取配置文件
 
+#### 8.1.1 `Config Server`
+
+* `pom.xml`
+
+```xml
+<dependency>
+     <groupId>org.springframework.cloud</groupId>
+     <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
+```
+
+* `ConfigServerApplication` 启动类
+
+```java
+@SpringBootApplication
+@EnableConfigServer
+public class ConfigServerApplication {
+
+    public static void main(String[] args){
+        SpringApplication.run(ConfigServerApplication.class,args);
+    }
+}
+```
+
+* `application.yml`
+```yaml
+server:
+  port: 8600
+spring:
+  cloud:
+    config:
+      server:
+        从本地加载参数文件
+        native:
+          search-locations: classpath:/shared
+  profiles:
+    active: native
+  application:
+    name: config-server
+```
+
+* 在`src/main/resources`下面新建一个`shared`的文件夹，对应上面的参数`spring.cloud.config.server.native.search-locations`,然后创建一个`config-client-dev.yml`文件
+
+  `config-client-dev.yml`
+
+```yaml
+server:
+  port: 8100
+foo: foo version 1.0.0
+```
+
+#### 8.1.2 `Config Client`
+
+* `pom.xml`
+
+```xml
+ <dependency>
+     <groupId>org.springframework.cloud</groupId>
+     <artifactId>spring-cloud-config-client</artifactId>
+</dependency>
+<!--一定要加入这个依赖  -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+* `ConfigClientApplication`
+
+```java
+@SpringBootApplication
+@RestController
+public class ConfigClientApplication {
+
+    public static void main(String[] args){
+        SpringApplication.run(ConfigClientApplication.class,args);
+    }
+
+    @Value("${foo}")
+    private String foo;
+
+    @GetMapping(value = "hi")
+    public String foo(){
+        return foo;
+    }
+}
+```
+
+* `bootstrap.yml`
+
+```yaml
+spring:
+  application:
+    # 服务名称
+    name: config-client
+  cloud:
+    config:
+      # 从url地址的Config Sever读取配置文件
+      uri: http://localhost:8600
+      # 如果没有读取没有成功，快速执行失败
+      fail-fast: false
+  # 指定配置文件为dev文件，
+  # 这个文件使用${spring.application.name}和${spring.profiles.active}构成文件名称，两者使用'-'连接
+  # 对于当前来说，这个对应于config server中的文件名称为config-client-dev.yml
+  profiles:
+    active: dev
+```
+
+
+
+### 8.2 `Config Server` 从远程Git仓库读取文件
+
+#### 8.2.1 `Config Server`
+
+* `application.yml`
+
+```yaml
+server:
+  port: 8600
+spring:
+  cloud:
+    config:
+      server:
+#        从本地加载参数文件
+#        native:
+#          search-locations: classpath:/shared
+#  profiles:
+#    active: native
+#     从github获取
+          git:
+            uri: https://github.com/chensj881008/config.git
+            # 文件路径
+            search-paths: repos
+            username: chensj881008
+            password:
+      # 版本归属
+      label: master
+  application:
+    name: config-server
+```
+
+#### 8.2.2 `Config Client`
+
+上面的信息不需要改变，启动项目，日志如下：
+
+```bash
+2019-04-27 17:15:27.652  INFO 16252 --- [)-192.168.222.1] c.c.c.ConfigServicePropertySourceLocator : Fetching config from server at : http://localhost:8600
+2019-04-27 17:15:27.663  INFO 16252 --- [)-192.168.222.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 13 ms
+2019-04-27 17:15:30.062  INFO 16252 --- [)-192.168.222.1] c.c.c.ConfigServicePropertySourceLocator : Located environment: name=config-client, profiles=[dev], label=null, version=a2fa514d7ad9bdb28f41080e46731a771b266410, state=null
+```
+
+服务端日志如下：
+
+```bash
+2019-04-27 17:15:22.433  INFO 15112 --- [nio-8600-exec-1] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: file:/C:/Users/chensj/AppData/Local/Temp/config-repo-6231340710909388449/repos/config-client-dev.yml
+2019-04-27 17:15:30.058  INFO 15112 --- [nio-8600-exec-4] o.s.c.c.s.e.NativeEnvironmentRepository  : Adding property source: file:/C:/Users/chensj/AppData/Local/Temp/config-repo-6231340710909388449/repos/config-client-dev.yml
+```
+
+出现下载配置文件的信息，即从Git上面获取配置文件

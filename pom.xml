@@ -31,6 +31,8 @@
         <module>winning-eureka-feign</module>
         <module>winning-eureka-monitor</module>
         <module>winning-eureka-zuul</module>
+        <module>winning-config-server</module>
+        <module>winning-config-client</module>
     </modules>
 
     <dependencies>

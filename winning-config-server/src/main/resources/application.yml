@@ -1,0 +1,21 @@
+server:
+  port: 8600
+spring:
+  cloud:
+    config:
+      server:
+#        从本地加载参数文件
+#        native:
+#          search-locations: classpath:/shared
+#  profiles:
+#    active: native
+#     从github获取
+          git:
+            uri: https://github.com/chensj881008/config.git
+            search-paths: repos
+            username: chensj881008
+            password:
+      label: master
+  application:
+    name: config-server
+
