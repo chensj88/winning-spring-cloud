@@ -543,7 +543,82 @@ public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
      */
     @Modifying
     @Query("update Employee o set o.age = :age where o.id = :id")
-    @Transactional
     public void update(@Param("id") Integer id,@Param("age") Integer age);
+```
+
+`service` 事务放在此处
+
+```java
+ @Transactional
+ @Override
+ public void update(Integer id, Integer age) {
+ employeeRepository.update(id,age);
+ }
+```
+
+
+
+事务在Spring Data Jpa 中使用：
+
+* 事务一般定义在`service`层
+* `@Modifying`,`@Query`,` @Transactional`三个注解的结合使用
+
+### `JpaSpecificationExecutor`接口使用
+
+* 该接口封装了`JPA Criteria`查询条件
+
+#### `JPA Criteria`
+
+​		Criteria 查询是以元模型的概念为基础的，元模型是为具体持久化单元的受管实体定义的，这些实体可以是实体类，嵌入类或者映射的父类。
+
+​		CriteriaQuery接口：代表一个specific的顶层查询对象，它包含着查询的各个部分，比如：select 、from、where、group by、order by等注意：CriteriaQuery对象只对实体类型或嵌入式类型的Criteria查询起作用
+
+​		Root接口：代表Criteria查询的根对象，Criteria查询的查询根定义了实体类型，能为将来导航获得想要的结果，它与SQL查询中的FROM子句类似
+
+​    1：Root实例是类型化的，且定义了查询的FROM子句中能够出现的类型。
+
+​    2：查询根实例能通过传入一个实体类型给 AbstractQuery.from方法获得。
+
+​    3：Criteria查询，可以有多个查询根。
+
+​    4：AbstractQuery是CriteriaQuery 接口的父类，它提供得到查询根的方法。CriteriaBuilder接口：用来构建CritiaQuery的构建器对象Predicate：一个简单或复杂的谓词类型，其实就相当于条件或者是条件组合
+
+##### **JPA元模型**
+
+> 在JPA中,标准查询是以元模型的概念为基础的.元模型是为具体持久化单元的受管实体定义的.这些实体可以是实体类,嵌入类或者映射的父类.提供受管实体元信息的类就是元模型类.
+>
+> 使用元模型类最大的优势是凭借其实例化可以在编译时访问实体的持久属性.该特性使得criteria 查询更加类型安全.
+
+```java
+  public void testPageBySpecification() {
+        Sort sort = new Sort(
+                Sort.Direction.DESC, "id"
+        );
+        Pageable pageable = PageRequest.of(0, 10, sort);
+
+        /*
+         * root 就是我们要查询的类型(Employee)
+         * query 添加查询条件
+         * CriteriaBuilder 构建Predicate
+         */
+        Specification<Employee> specification = new Specification<Employee>() {
+
+            @Override
+            public Predicate toPredicate(Root<Employee> root,
+                                         CriteriaQuery<?> query,
+                                         CriteriaBuilder cb) {
+                // root -> Employee -> age
+                Path<Integer> path = root.get("age");
+                // age > 50
+                return cb.gt(path,50);
+            }
+        };
+        Page<Employee> employees = employeeRepository.findAll(specification,pageable);
+        System.out.println("查询的总页数：" + employees.getTotalPages());
+        System.out.println("查询的总记录数：" + employees.getTotalElements());
+        System.out.println("查询的当前页：" + (employees.getNumber() + 1));
+        System.out.println("查询的当前页元素：" + employees.getContent());
+        System.out.println("查询的当前页元素总数：" + employees.getNumberOfElements());
+    }
 ```
 
