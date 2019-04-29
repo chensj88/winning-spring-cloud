@@ -14,6 +14,21 @@
     <description>
         Cloud Zipkin Server
         链路追踪的服务中心，负责存储链路信息
+        基于zipkin-server实现，
+        官方网站为：https://zipkin.io/
+        构建方式为：
+         docker：
+                docker run -d -p 9411:9411 openzipkin/zipkin
+         java：
+                curl -sSL https://zipkin.io/quickstart.sh | bash -s
+                java -jar zipkin.jar
+         source code：
+            git clone https://github.com/openzipkin/zipkin
+            cd zipkin
+            ./mvnw -DskipTests --also-make -pl zipkin-server clean install
+            # Run the server
+            java -jar ./zipkin-server/target/zipkin-server-*exec.jar
+
     </description>
 
     <dependencies>
