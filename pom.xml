@@ -33,6 +33,7 @@
         <module>winning-eureka-zuul</module>
         <module>winning-config-server</module>
         <module>winning-config-client</module>
+        <module>winning-spring-sleuth</module>
     </modules>
 
     <dependencies>

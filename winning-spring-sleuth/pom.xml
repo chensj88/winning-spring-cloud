@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-spring-cloud</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>winning-spring-sleuth</artifactId>
+
+    <packaging>pom</packaging>
+
+    <description>
+        学习 spring cloud sleuth 链路追踪
+
+        包含四个子项目
+        eureka-server    服务注册中心
+        zipkin-service   链路追踪的服务中心，负责存储链路信息
+        gateway-service  服务网关，负责请求转换，同时也是一个链路追踪的客户端，负责产生链路数据，并上传给zipkin-server
+        user-service     服务提供者，对外暴露API接口，也是一个链路追踪的客户端，负责产生链路数据
+
+    </description>
+    <modules>
+        <module>cloud-zipkin-service</module>
+    </modules>
+</project>
