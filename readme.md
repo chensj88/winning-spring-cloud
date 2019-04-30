@@ -3685,5 +3685,7 @@ public class AuthTokenFilter extends ZuulFilter {
 
 #### 9.3.3 使用MySQL存储链路数据
 
-spring cloud 2.1.x 取消
+[参考文档](https://github.com/apache/incubator-zipkin/tree/master/zipkin-storage/mysql-v1)
+
+暂不处理
 
