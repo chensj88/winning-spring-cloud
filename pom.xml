@@ -40,6 +40,7 @@
         <module>winning-config-server</module>
         <module>winning-config-client</module>
         <module>winning-spring-sleuth</module>
+        <module>winning-spring-sleuth-rabbit</module>
     </modules>
 
     <dependencies>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-spring-cloud</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>winning-spring-sleuth-rabbit</artifactId>
+
+    <description>
+        学习 spring cloud sleuth 链路追踪
+        通过rabbitmq传输链路数据
+
+        包含四个子项目
+        cloud-eureka-server   8000  服务注册中心
+        cloud-rabbit-server   8700  链路追踪的服务中心，负责存储链路信息
+        cloud-gateway-rabbit-service 8900  服务网关
+        cloud-user-rabbit-service    8800  服务提供者
+    </description>
+    <modules>
+        <module>cloud-gateway-rabbit-service</module>
+        <module>cloud-user-rabbit-service</module>
+        <module>cloud-rabbitmq-server</module>
+    </modules>
+
+</project>

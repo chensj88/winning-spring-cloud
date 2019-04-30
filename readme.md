@@ -3677,3 +3677,13 @@ public class AuthTokenFilter extends ZuulFilter {
 }
 ```
 
+#### 9.3.2 使用RabbitMQ传输链路数据
+
+##### 9.3.2.1 工程
+
+参见`winning-spring-sleuth-rabbit`
+
+#### 9.3.3 使用MySQL存储链路数据
+
+spring cloud 2.1.x 取消
+
