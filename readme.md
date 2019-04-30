@@ -3187,3 +3187,493 @@ spans 的parent/child关系图形化如下：
 
 
 ![](https://raw.githubusercontent.com/spring-cloud/spring-cloud-sleuth/master/docs/src/main/asciidoc/images/parents.png)
+
+### 9.2 项目案例
+
+项目构成分为四个部分：
+
+* `cloud-eureka-server`   `8000`  
+  
+  Eureka 服务注册中心
+  
+* `cloud-zipkin-server`   `8700`  
+  
+  Eureka Client,Zipkin Server,链路追踪的服务中心，负责存储链路信息
+  
+* `cloud-user-service`    `8800`  
+
+  Eureka Client ,Zipkin Client
+
+  服务提供者，对外暴露API接口，也是一个链路追踪的客户端，负责产生链路数据，并上传给zipkin-server
+  
+* `cloud-gateway-service` `8900`  
+  
+  Eureka Client ,Zuul,Zipkin Client
+  
+  服务网关，负责请求转换，同时也是一个链路追踪的客户端，负责产生链路数据，并上传给zipkin-server
+
+#### 9.2.1 `cloud-eureka-server` 
+
+##### `pom.xml`
+
+```xml
+<dependency>
+     <groupId>org.springframework.cloud</groupId>
+     <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <optional>true</optional>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
+
+##### `application.yml`
+
+```yaml
+server:
+  # 端口
+  port: 8000
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    # 本身为注册中心，不需要去检索服务信息
+    register-with-eureka: false
+    # 本身为注册中心，是否需要在注册中心注册，默认true  集群设置为true
+    fetch-registry: false
+    # 注册地址
+    service-url:
+      # 默认访问地址
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+  dashboard:
+     path: /eureka/server
+spring:
+  application:
+    name: eureka-server
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+```
+
+##### `entry`
+
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class WinningEurekaServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(WinningEurekaServerApplication.class, args);
+    }
+
+}
+```
+
+#### 9.2.2 `cloud-zipkin-server`
+
+> 从 Spring Cloud 2.1.x 开始，spring-cloud-starter-sleuth不在集成zipkin-server，注解`@EnableZipkinServer`将不能在使用，因此需要自行加入依赖`zipkin-server`和`zipkin-autoconfigure-ui`
+
+##### `pom.xml`
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<!--zipkin-server-->
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-server</artifactId>
+    <version>${zipkin.version}</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<!--zipkin-server UI 页面依赖-->
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-autoconfigure-ui</artifactId>
+    <version>${zipkin.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<!--spring boot actuator-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+##### `application.yml`
+
+```yaml
+server:
+  port: 8700
+eureka:
+  client:
+    service-url:
+      ### 注册中心地址
+      defaultZone: http://localhost:8000/eureka
+    ###  需要将服务注册到注册中心
+    register-with-eureka: true
+    ### 检索服务信息
+    fetch-registry: true
+    # 注册区域，AWS使用
+    region: ch-east-1
+    healthcheck:
+      # 健康检查 开启 启用客户端运行状况检查可以修改server端运行状态
+      enabled: true
+  instance:
+    hostname: localhost
+    # 主页下面三个参数，是客户端发布给服务端
+    #  主界面
+    homePageUrl: https://${eureka.instance.hostname}:${server.port}/
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+spring:
+  application:
+    name: zipkin-server
+  devtools:
+    restart:
+      # 热部署生效
+      enabled: true
+      # 设置重启的目录
+      additional-paths: src/main/java
+# 监控配置
+management:
+  #server:
+  # 监控服务页面端口
+  #port: 8088
+  endpoints:
+    web:
+      # 默认监控前缀
+      #      base-path: /monitor
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+  # 解决zipkin server UI报错问题
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+```
+
+##### `entry`
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+@EnableZipkinServer
+public class ZipkinServerApplication {
+
+    public static void main(String[] args){
+        SpringApplication.run(ZipkinServerApplication.class,args);
+    }
+}
+```
+
+#### 9.2.3  `cloud-user-service` 
+
+##### `pom.xml`
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zipkin</artifactId>
+</dependency>
+<!--一定要加入这个依赖  -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<!--spring boot actuator-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+##### `application.yml`
+
+```yaml
+server:
+  port: 8800
+eureka:
+  client:
+    service-url:
+      ### 注册中心地址
+      defaultZone: http://localhost:8000/eureka
+    ###  需要将服务注册到注册中心
+    register-with-eureka: true
+    ### 检索服务信息
+    fetch-registry: true
+    # 注册区域，AWS使用
+    region: ch-east-1
+    healthcheck:
+      # 健康检查 开启 启用客户端运行状况检查可以修改server端运行状态
+      enabled: true
+  instance:
+    hostname: localhost
+    # 主页下面三个参数，是客户端发布给服务端
+    #  主界面
+    homePageUrl: https://${eureka.instance.hostname}:${server.port}/
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+spring:
+  application:
+    name: user-service
+  devtools:
+    restart:
+      # 热部署生效
+      enabled: true
+      # 设置重启的目录
+      additional-paths: src/main/java
+  zipkin:
+    # zipkin server 地址
+    base-url: http://localhost:8700
+  sleuth:
+    sampler:
+      # 链路上传的概率
+      probability: 1.0
+      percentage: 1.0
+# 监控配置
+management:
+  #server:
+  # 监控服务页面端口
+  #port: 8088
+  endpoints:
+    web:
+      # 默认监控前缀
+      #      base-path: /monitor
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+```
+
+##### `entry`
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class UserServiceApplication {
+
+    public static void main(String[] args){
+        SpringApplication.run(UserServiceApplication.class,args);
+    }
+}
+```
+
+#### 9.2.4 `cloud-gateway-service`
+
+##### `pom.xml`
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zipkin</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+</dependency>
+<!--一定要加入这个依赖  -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<!--spring boot actuator-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+##### `application.yml`
+
+```yaml
+server:
+  port: 8900
+eureka:
+  client:
+    service-url:
+      ### 注册中心地址
+      defaultZone: http://localhost:8000/eureka
+    ###  需要将服务注册到注册中心
+    register-with-eureka: true
+    ### 检索服务信息
+    fetch-registry: true
+    # 注册区域，AWS使用
+    region: ch-east-1
+    healthcheck:
+      # 健康检查 开启 启用客户端运行状况检查可以修改server端运行状态
+      enabled: true
+  instance:
+    hostname: localhost
+    # 主页下面三个参数，是客户端发布给服务端
+    #  主界面
+    homePageUrl: https://${eureka.instance.hostname}:${server.port}/
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+spring:
+  application:
+    name: gateway-service
+  devtools:
+    restart:
+      # 热部署生效
+      enabled: true
+      # 设置重启的目录
+      additional-paths: src/main/java
+  zipkin:
+    # zipkin server 地址
+    base-url: http://localhost:8700
+  sleuth:
+    sampler:
+      # 链路上传的概率
+      probability: 1.0
+      percentage: 1.0
+# 监控配置
+management:
+  #server:
+  # 监控服务页面端口
+  #port: 8088
+  endpoints:
+    web:
+      # 默认监控前缀
+      #      base-path: /monitor
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+zuul:
+  routes:
+    hiapi:
+      path: /user-api/**
+      serviceId: user-service
+  # 设置超时时间
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+    max-total-connections: 500
+# 配置失效时间
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+```
+
+##### `entry`
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+@EnableZuulProxy
+public class GatewayServiceApplication {
+    public static void main(String[] args){
+        SpringApplication.run(GatewayServiceApplication.class,args);
+    }
+}
+```
+
+#### 9.2.5 项目启动
+
+* 按照`cloud-eureka-server`、`cloud-zipkin-server`、`cloud-user-service`、`cloud-gateway-service`分别启动项目。
+
+* 在浏览器或者postman发送Get请求`localhost:8900/user-api/hi`,然后就可以在`http://localhost:8700/zipkin`中查看到数据
+
+  ![](https://raw.githubusercontent.com/spring-cloud/spring-cloud-sleuth/master/docs/src/main/asciidoc/images/zipkin-traces.png)
+
+
+
+### 9.3 整合使用
+
+#### 9.3.1 添加自定义数据
+
+​	在gateway-service中添加过滤器继承`ZuulFilter`
+
+```java
+@Component
+public class AuthTokenFilter extends ZuulFilter {
+
+    /** logger */
+    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+    @Autowired
+    private Tracer tracer;
+    @Override
+    public String filterType() {
+        return PRE_TYPE;
+    }
+
+    @Override
+    public int filterOrder() {
+        return 900;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return true;
+    }
+
+    @Override
+    public Object run() throws ZuulException {
+        Span currentSpan = this.tracer.currentSpan();
+        // 向当前的span中添加tag
+        currentSpan.tag("operator","chensj");
+        // 输出 TraceId
+        logger.info(this.tracer.currentSpan().context().traceIdString());
+        return null;
+    }
+}
+```
+

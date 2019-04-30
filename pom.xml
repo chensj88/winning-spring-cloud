@@ -23,6 +23,11 @@
         <zipkin.version>2.12.0</zipkin.version>
     </properties>
 
+    <description>
+        spring cloud 工程
+        备注： zipkin 为 https://github.com/apache/incubator-zipkin
+                     官网： https://zipkin.io/
+    </description>
     <modules>
         <module>spring-boot-module</module>
         <module>winning-eureka-server</module>

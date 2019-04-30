@@ -45,6 +45,11 @@ management:
   endpoint:
     shutdown:
       enabled: false
+  # 解决zipkin server UI报错问题
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
 info:
   app:
     encoding: UTF-8
