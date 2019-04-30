@@ -3146,8 +3146,8 @@ spring:
 
 ​		举个例子，在微服务系统中，一个来自用户的请求，请求先达到前端A（如前端界面），然后通过远程调用，达到系统的中间件B、C（如负载均衡、网关等），最后达到后端服务D、E，后端经过一系列的业务逻辑计算最后将数据返回给用户。对于这样一个请求，经历了这么多个服务，怎么样将它的请求过程的数据记录下来呢？这就需要用到服务链路追踪。
 
-​		Google开源的 Dapper链路追踪组件，并在2010年发表了论文《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》，这篇文章是业内实现链路追踪的标杆和理论基础，具有非常大的参考价值。
-目前，链路追踪组件有Google的Dapper，Twitter 的Zipkin，以及阿里的Eagleeye （鹰眼）等，它们都是非常优秀的链路追踪开源组件。
+​		`Google`开源的`Dapper`链路追踪组件，并在2010年发表了论文《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》，这篇文章是业内实现链路追踪的标杆和理论基础，具有非常大的参考价值。
+目前，链路追踪组件有`Google`的`Dapper`，`Twitter`的`Zipkin`，以及阿里的`Eagleeye` （鹰眼）等，它们都是非常优秀的链路追踪开源组件。
 
 ​		主要介绍如何在Spring Cloud Sleuth中集成Zipkin。在Spring Cloud Sleuth中集成Zipkin非常的简单，只需要引入相应的依赖和做相关的配置即可。
 
@@ -3155,17 +3155,17 @@ spring:
 
 Spring Cloud Sleuth采用的是Google的开源项目Dapper的专业术语。
 
-- Span：基本工作单元，发送一个远程调度任务就会产生一个Span，Span是一个64位ID唯一标识的，Trace是用另一个64位ID唯一标识的，Span还有其他数据信息，比如摘要、时间戳事件、Span的ID、以及进度ID。
-- Trace：一系列Span组成的一个树状结构。请求一个微服务系统的API接口，这个API接口，需要调用多个微服务，调用每个微服务都会产生一个新的Span，所有由这个请求产生的Span组成了这个Trace。
-- Annotation：用来及时记录一个事件的，一些核心注解用来定义一个请求的开始和结束 。这些注解包括以下：
-  - cs - Client Sent：客户端发送一个请求，这个注解描述了这个Span的开始
-  - sr - Server Received：服务端获得请求并准备开始处理它，如果将其sr减去cs时间戳便可得到网络传输的时间。
-  - ss - Server Sent：（服务端发送响应）–该注解表明请求处理的完成(当请求返回客户端)，如果ss的时间戳减去sr时间戳，就可以得到服务器请求的时间。
-  - cr - Client Received：（客户端接收响应）-此时Span的结束，如果cr的时间戳减去cs时间戳便可以得到整个请求所消耗的时间。
+- `Span`：基本工作单元，发送一个远程调度任务就会产生一个`Spa`n，`Span`是一个64位ID唯一标识的，`Trace`是用另一个64位ID唯一标识的，Span还有其他数据信息，比如摘要、时间戳事件、Span的ID、以及进度ID。
+- `Trace`：一系列`Span`组成的一个树状结构。请求一个微服务系统的API接口，这个API接口，需要调用多个微服务，调用每个微服务都会产生一个新的`Span`，所有由这个请求产生的`Span`组成了这个`Trace`。
+- `Annotation`：用来及时记录一个事件的，一些核心注解用来定义一个请求的开始和结束 。这些注解包括以下：
+  - `cs` - Client Sent：客户端发送一个请求，这个注解描述了这个Span的开始
+  - `sr` - Server Received：服务端获得请求并准备开始处理它，如果将其sr减去cs时间戳便可得到网络传输的时间。
+  - `ss` - Server Sent：（服务端发送响应）–该注解表明请求处理的完成(当请求返回客户端)，如果ss的时间戳减去sr时间戳，就可以得到服务器请求的时间。
+  - `cr` - Client Received：（客户端接收响应）-此时Span的结束，如果cr的时间戳减去cs时间戳便可以得到整个请求所消耗的时间。
 
 如果一个请求服务如下：
 
-![](https://img-blog.csdn.net/20171226191228854?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaHJ5MjAxNQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![](https://raw.githubusercontent.com/spring-cloud/spring-cloud-sleuth/master/docs/src/main/asciidoc/images/dependencies.png)
 
 那么此时将Span和Trace在一个系统中使用Zipkin注解的过程图形化： 
 
