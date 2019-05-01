@@ -36,7 +36,6 @@ spring:
     sampler:
       # 链路上传的概率
       probability: 1.0
-      percentage: 1.0
 # 监控配置
 management:
   #server:
