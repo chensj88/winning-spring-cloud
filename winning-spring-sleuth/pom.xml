@@ -17,15 +17,17 @@
         学习 spring cloud sleuth 链路追踪
 
         包含四个子项目
-        cloud-eureka-server   8000  服务注册中心
-        cloud-zipkin-server   8700  链路追踪的服务中心，负责存储链路信息
-        cloud-gateway-service 8900  服务网关，负责请求转换，同时也是一个链路追踪的客户端，负责产生链路数据，并上传给zipkin-server
-        cloud-user-service    8800  服务提供者，对外暴露API接口，也是一个链路追踪的客户端，负责产生链路数据
+        cloud-eureka-server         8000  服务注册中心
+        cloud-zipkin-server         8700  链路追踪的服务中心，负责存储链路信息
+        cloud-zipkin-mysql-server   8700  链路追踪的服务中心，负责存储链路信息,存储到mysql中
+        cloud-gateway-service       8900  服务网关，负责请求转换，同时也是一个链路追踪的客户端，负责产生链路数据，并上传给zipkin-server
+        cloud-user-service          8800  服务提供者，对外暴露API接口，也是一个链路追踪的客户端，负责产生链路数据
 
     </description>
     <modules>
         <module>cloud-user-service</module>
         <module>cloud-zipkin-server</module>
         <module>cloud-gateway-service</module>
+        <module>cloud-zipkin-mysql-server</module>
     </modules>
 </project>
