@@ -3689,3 +3689,19 @@ public class AuthTokenFilter extends ZuulFilter {
 
 暂不处理
 
+#### 9.3.4 使用ElasticSearch存储链路数据
+
+暂不处理
+
+
+
+## 十、微服务监控
+
+Spring Boot Admin用于管理和监控一个或者多个Spring Boot程序。Spring Boot Admin分为Server 端和 Client 端，Client端可以通过Http向Server端注册，也可以结合 Spring Cloud 的服务注册组件 Eureka 进行注册。Spring Boot Admin 提供了用 AngularJs 写的Ul界面，用于管理和监控。其中监控内容包括 Spring Boot 的监控组件Actuator的各个Http节点，也支持更高级的功能，包括Turbine、Jmx、Loglevel 等。
+
+本章以案例的形式来讲解 Spring Boot Admin 主要包括以下的内容。
+
+* 使用 Spring Boot Admin 监控 Spring Cloud 微服务
+* Spring Boot Admin 集成Turbine，聚合监控微服务系统中熔断器的状况。
+* Spring Boot Admin 集成Security安全登录界面。
+
