@@ -3705,3 +3705,5 @@ Spring Boot Admin用于管理和监控一个或者多个Spring Boot程序。Spri
 * Spring Boot Admin 集成Turbine，聚合监控微服务系统中熔断器的状况。
 * Spring Boot Admin 集成Security安全登录界面。
 
+### 10.1 构建Admin Server
+

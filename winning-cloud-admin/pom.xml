@@ -15,12 +15,24 @@
     <description>
         spring boot admin
         主要使用如下几个工程：
-          cloud-admin-server    9000 构建 Admin Server
-          cloud-eureka-server   8000 构建 Eureka Server
+            cloud-admin-server      9000 构建 Admin Server
+            cloud-eureka-server     8000 构建 Eureka Server
+            cloud-admin-client      9100 构建 Eureka Client
+            cloud-admin-client-one  9101 构建 Eureka Client + Hystrix
+            cloud-admin-client-two  9102 构建 Eureka Client + Hystrix
+            cloud-turbine-service   9200 构建 turbine 监控
     </description>
     <modules>
+        <!--9000-->
         <module>cloud-admin-server</module>
+        <!--8000 -->
         <module>cloud-eureka-server</module>
+        <!--9100-->
         <module>cloud-admin-client</module>
+        <!--演示集成Hystrix、turbine 9101 9102-->
+        <module>cloud-admin-client-one</module>
+        <module>cloud-admin-client-two</module>
+        <!---->
+        <module>cloud-turbine-service</module>
     </modules>
 </project>

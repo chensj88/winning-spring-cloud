@@ -4,6 +4,7 @@ server:
 eureka:
   instance:
     hostname: localhost
+    prefer-ip-address: true
   client:
     # 本身为注册中心，不需要去检索服务信息
     register-with-eureka: false
