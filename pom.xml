@@ -43,7 +43,8 @@
         <module>winning-spring-sleuth</module>
         <module>winning-spring-sleuth-rabbit</module>
         <module>winning-spring-sleuth-elastic</module>
-        <module>winning-cloud-admin</module>
+        <!--<module>winning-cloud-admin</module>-->
+        <module>cloud-admin-module</module>
     </modules>
 
     <dependencies>
