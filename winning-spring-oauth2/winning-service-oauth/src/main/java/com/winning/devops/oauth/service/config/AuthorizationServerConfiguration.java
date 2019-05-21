@@ -1,5 +1,6 @@
 package com.winning.devops.oauth.service.config;
 
+import com.winning.devops.oauth.service.customImpl.MyRedisTokenStore;
 import com.winning.devops.oauth.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;

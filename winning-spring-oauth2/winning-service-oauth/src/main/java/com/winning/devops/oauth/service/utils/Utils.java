@@ -8,7 +8,7 @@ package com.winning.devops.oauth.service.utils;
  * @date: 2019-05-21 17:14
  */
 public class Utils {
-    public class RESOURCEIDS {
-        public static final String ORDER = "token";
+    public static class RESOURCEIDS {
+        public static final String ORDER = "order";
     }
 }

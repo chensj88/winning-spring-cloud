@@ -2,6 +2,8 @@ package com.winning.devops.oauth.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 /**
  * @author chensj
@@ -11,9 +13,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date: 2019-05-21 17:08
  */
 @SpringBootApplication
-public class WinningOAuthServiceApplication {
+@EnableResourceServer
+@EnableEurekaClient
+public class WinningOauthServiceApplication {
 
     public static void main(String[] args){
-        SpringApplication.run(WinningOAuthServiceApplication.class,args);
+        SpringApplication.run(WinningOauthServiceApplication.class,args);
     }
 }
