@@ -45,6 +45,7 @@
         <module>winning-spring-sleuth-elastic</module>
         <!--<module>winning-cloud-admin</module>-->
         <module>cloud-admin-module</module>
+        <module>winning-spring-oauth2</module>
     </modules>
 
     <dependencies>
