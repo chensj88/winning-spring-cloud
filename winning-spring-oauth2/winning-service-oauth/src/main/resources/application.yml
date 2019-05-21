@@ -38,6 +38,7 @@ spring:
   redis:
     host: 192.168.31.191
     database: 0
+    password: 123456
 # 监控配置
 management:
   #server:

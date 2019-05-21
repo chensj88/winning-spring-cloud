@@ -16,6 +16,7 @@
 
     <description>
         参考文档：https://www.jianshu.com/p/3427549a148a
+        https://github.com/liangxiaobo/test-security-oauth2.git
         统一使用 winning-eureka-server 作为注册中心
         winning-eureka-server  8000  注册中心
         winning-service-oauth  9100  获取授权token
