@@ -36,9 +36,9 @@ spring:
       # 设置重启的目录
       additional-paths: src/main/java
   redis:
-    host: 192.168.31.191
+    host: 172.17.1.242
     database: 0
-    password: 123456
+#    password: 123456
 # 监控配置
 management:
   #server:

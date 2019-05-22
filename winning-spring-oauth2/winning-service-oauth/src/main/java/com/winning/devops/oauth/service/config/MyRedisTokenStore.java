@@ -1,4 +1,4 @@
-package com.winning.devops.oauth.service.customImpl;
+package com.winning.devops.oauth.service.config;
 
 /**
  * @author chensj
