@@ -61,6 +61,8 @@ management:
   endpoint:
     shutdown:
       enabled: false
+    health:
+      show-details: always
 info:
   app:
     encoding: UTF-8
