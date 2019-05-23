@@ -9,16 +9,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <modules>
-        <module>winning-service-oauth</module>
-    </modules>
     <artifactId>winning-spring-oauth2</artifactId>
+    <modules>
+        <module>oauth2-auth-server</module>
+        <module>oauth2-auth-client</module>
+        <module>oauth2-eureka-server</module>
+    </modules>
 
     <description>
         参考文档：https://www.jianshu.com/p/3427549a148a
         https://github.com/liangxiaobo/test-security-oauth2.git
-        统一使用 winning-eureka-server 作为注册中心
-        winning-eureka-server  8000  注册中心
-        winning-service-oauth  9100  获取授权token
+        oauth2-eureka-server  9000  注册中心
+        oauth2-auth-server    9100  Auth Server,Resource Server
+        oauth2-auth-client    9200  Auth Client,Resource Client
     </description>
 </project>

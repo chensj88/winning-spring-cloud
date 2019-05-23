@@ -24,11 +24,11 @@
            在 spring boot admin 2.1.x 中不在提供集成Hystrix、Turbine
     </description>
     <modules>
-       <!-- <module>cloud-admin-server</module>
+        <module>cloud-admin-server</module>
         <module>cloud-eureka-server</module>
         <module>cloud-admin-client</module>
         <module>cloud-admin-client-one</module>
         <module>cloud-admin-client-two</module>
-        <module>cloud-turbine-service</module>-->
+        <module>cloud-turbine-service</module>
     </modules>
 </project>
