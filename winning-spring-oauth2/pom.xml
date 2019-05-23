@@ -22,5 +22,7 @@
         oauth2-eureka-server  9000  注册中心
         oauth2-auth-server    9100  Auth Server,Resource Server
         oauth2-auth-client    9200  Auth Client,Resource Client
+
+        https://gitee.com/zhang.w/boot-security.git
     </description>
 </project>

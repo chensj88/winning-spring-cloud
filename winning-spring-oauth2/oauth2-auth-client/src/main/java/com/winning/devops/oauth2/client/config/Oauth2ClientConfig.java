@@ -34,6 +34,10 @@ public class Oauth2ClientConfig {
         return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), clientCredentialsResourceDetails());
     }
 
+    /**
+     * 注入一个OAuth2RestTemplate 类型的Bean用于向service-auth服务请求。
+     * @return
+     */
     @Bean
     public OAuth2RestTemplate clientCredentialsRestTemplate() {
         return new OAuth2RestTemplate(clientCredentialsResourceDetails());
