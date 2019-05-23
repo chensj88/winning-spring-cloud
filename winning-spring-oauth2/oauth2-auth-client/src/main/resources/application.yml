@@ -1,0 +1,67 @@
+eureka:
+  client:
+    service-url:
+      ### 注册中心地址
+      defaultZone: http://localhost:9000/eureka
+    ###  需要将服务注册到注册中心
+    register-with-eureka: true
+    ### 检索服务信息
+    fetch-registry: true
+    # 注册区域，AWS使用
+    region: ch-east-1
+    healthcheck:
+      # 健康检查 开启 启用客户端运行状况检查可以修改server端运行状态
+      enabled: true
+  instance:
+    hostname: localhost
+    # 主页下面三个参数，是客户端发布给服务端
+    #  主界面
+    homePageUrl: https://${eureka.instance.hostname}:${server.port}/
+### 服务启动端口号
+server:
+  port: 9200
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+spring:
+  application:
+    name: oauth2-auth-client
+  devtools:
+    restart:
+      # 热部署生效
+      enabled: true
+      # 设置重启的目录
+      additional-paths: src/main/java
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.31.190:3306/cloud_oauth2?useSSL=false
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+# 监控配置
+management:
+  endpoints:
+    web:
+      # 默认监控前缀
+      #      base-path: /monitor
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}

@@ -28,6 +28,10 @@
         spring cloud 工程
         备注： zipkin 为 https://github.com/apache/incubator-zipkin
                      官网： https://zipkin.io/
+        spring boot admin
+            https://blog.csdn.net/u010562966/article/details/86636469
+            https://github.com/codecentric/spring-boot-admin.git
+            http://blog.codecentric.de
     </description>
     <modules>
         <module>spring-boot-module</module>
