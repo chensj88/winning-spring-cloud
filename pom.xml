@@ -50,6 +50,7 @@
         <module>winning-cloud-admin</module>
         <module>cloud-admin-module</module>
         <module>winning-spring-oauth2</module>
+        <module>spring-boot-jwt</module>
     </modules>
 
     <dependencies>
