@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-spring-cloud</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>winning-cloud-sleuth</artifactId>
+
+    <description>
+        spring cloud sleuth 学习示例
+        参考文章：
+        https://www.cnblogs.com/forezp/p/10364435.html
+
+        spring-cloud-sleuth             基础版本   链路数据通过http传输，链路数据保存在内存中
+        spring-cloud-sleuth-rabbitmq    rabbitmq  链路数据通过rabbitmq传输，链路数据保存在内存中
+        spring-cloud-sleuth-mysql       mysql      链路数据通过http传输，链路数据保存在mysql中
+    </description>
+    <modules>
+        <module>spring-cloud-sleuth</module>
+        <module>spring-cloud-sleuth-rabbitmq</module>
+        <module>spring-cloud-sleuth-mysql</module>
+    </modules>
+</project>
