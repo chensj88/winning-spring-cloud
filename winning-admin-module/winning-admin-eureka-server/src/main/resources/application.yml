@@ -1,0 +1,22 @@
+server:
+  # 端口
+  port: 8761
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    # 本身为注册中心，不需要去检索服务信息
+    register-with-eureka: false
+    # 本身为注册中心，是否需要在注册中心注册，默认true  集群设置为true
+    fetch-registry: false
+    # 注册地址
+    service-url:
+      # 默认访问地址
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+# 自定义eureka主页
+#  dashboard:
+#    path: /eureka/server
+spring:
+  application:
+    name: spring-boot-admin-eureka-server

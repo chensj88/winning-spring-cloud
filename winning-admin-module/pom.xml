@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-spring-cloud</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>winning-admin-module</artifactId>
+
+    <packaging>pom</packaging>
+
+    <description>
+        spring boot admin 2.1.0 版本学习使用
+    </description>
+    <modules>
+        <module>winning-admin-server</module>
+        <module>winning-admin-eureka-server</module>
+        <module>winning-spring-admin-client</module>
+    </modules>
+
+</project>

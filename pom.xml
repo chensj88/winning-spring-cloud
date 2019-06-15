@@ -51,6 +51,7 @@
         <module>cloud-admin-module</module>
         <module>winning-spring-oauth2</module>
         <module>spring-boot-jwt</module>
+        <module>winning-admin-module</module>
     </modules>
 
     <dependencies>
@@ -90,6 +91,14 @@
         </plugins>
     </build>
     <repositories>
+        <repository>
+            <id>Alibaba-milestones</id>
+            <name>Alibaba Milestones</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
