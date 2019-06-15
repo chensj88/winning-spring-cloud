@@ -21,6 +21,11 @@
         spring-cloud-sleuth-rabbitmq            rabbitmq            链路数据通过rabbitmq传输，链路数据保存在内存中
         spring-cloud-sleuth-mysql               mysql               链路数据通过http传输，链路数据保存在mysql中
         spring-cloud-sleuth-elasticsearch       elasticsearch       链路数据通过http传输，链路数据保存在elasticsearch中,通过kibana展示
+
+        说明：
+          mysql与elasticsearch仅提供zipkin-server的使用，链路数据产生依赖于spring-cloud-sleuth下面的
+            sleuth-eureka-client
+            sleuth-eureka-feign
     </description>
     <modules>
         <module>spring-cloud-sleuth</module>
