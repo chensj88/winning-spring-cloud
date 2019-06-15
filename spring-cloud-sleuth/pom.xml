@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-spring-cloud</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <modules>
+        <module>sleuth-zipkin-server</module>
+        <module>sleuth-eureka-client</module>
+        <module>sleuth-eureka-feign</module>
+    </modules>
+    <artifactId>spring-cloud-sleuth</artifactId>
+
+    <description>
+        spring cloud sleuth
+        注册中心使用已经配置好的
+        eureka-server         8761   注册中心
+        包含三个项目
+        sleuth-zipkin-server         9411   zipkin-server
+        sleuth-eureka-client  8763   服务提供者
+        sleuth-eureka-feign   8765   服务消费者
+    </description>
+
+</project>

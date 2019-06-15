@@ -52,6 +52,7 @@
         <module>winning-spring-oauth2</module>
         <module>spring-boot-jwt</module>
         <module>winning-admin-module</module>
+        <module>spring-cloud-sleuth</module>
     </modules>
 
     <dependencies>
