@@ -53,6 +53,7 @@
         <module>spring-boot-jwt</module>
         <module>winning-admin-module</module>
         <module>spring-cloud-sleuth</module>
+        <module>spring-cloud-sleuth-rabbitmq</module>
     </modules>
 
     <dependencies>
