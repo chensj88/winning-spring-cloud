@@ -10,19 +10,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>winning-cloud-sleuth</artifactId>
+    <packaging>pom</packaging>
 
     <description>
         spring cloud sleuth 学习示例
         参考文章：
         https://www.cnblogs.com/forezp/p/10364435.html
 
-        spring-cloud-sleuth             基础版本   链路数据通过http传输，链路数据保存在内存中
-        spring-cloud-sleuth-rabbitmq    rabbitmq  链路数据通过rabbitmq传输，链路数据保存在内存中
-        spring-cloud-sleuth-mysql       mysql      链路数据通过http传输，链路数据保存在mysql中
+        spring-cloud-sleuth                     基础版本            链路数据通过http传输，链路数据保存在内存中
+        spring-cloud-sleuth-rabbitmq            rabbitmq            链路数据通过rabbitmq传输，链路数据保存在内存中
+        spring-cloud-sleuth-mysql               mysql               链路数据通过http传输，链路数据保存在mysql中
+        spring-cloud-sleuth-elasticsearch       elasticsearch       链路数据通过http传输，链路数据保存在elasticsearch中,通过kibana展示
     </description>
     <modules>
         <module>spring-cloud-sleuth</module>
         <module>spring-cloud-sleuth-rabbitmq</module>
         <module>spring-cloud-sleuth-mysql</module>
+        <module>spring-cloud-sleuth-elasticsearch</module>
     </modules>
 </project>
