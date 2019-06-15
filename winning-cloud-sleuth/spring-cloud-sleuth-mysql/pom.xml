@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-cloud-sleuth</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring-cloud-sleuth-mysql</artifactId>
+
+    <packaging>pom</packaging>
+    <modules>
+        <module>sleuth-zipkin-mysql-server</module>
+    </modules>
+    <description>
+        sleuth 数据保存在mysql 中
+
+        消费者和提供者采用普通的服务
+    </description>
+
+</project>
