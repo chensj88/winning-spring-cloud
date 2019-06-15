@@ -47,7 +47,9 @@
         <module>winning-spring-sleuth</module>
         <module>winning-spring-sleuth-rabbit</module>
         <module>winning-spring-sleuth-elastic</module>
-        <module>winning-cloud-admin</module>
+<!--
+           项目参考spring boot 1.5.X 和spring cloud Dalston版本，不使用2.x版本
+        <module>winning-cloud-admin</module>-->
         <module>cloud-admin-module</module>
         <module>winning-spring-oauth2</module>
         <module>spring-boot-jwt</module>

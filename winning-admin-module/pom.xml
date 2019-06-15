@@ -15,6 +15,7 @@
 
     <description>
         spring boot admin 2.1.0 版本学习使用
+        https://www.cnblogs.com/forezp/p/10242004.html
     </description>
     <modules>
         <module>winning-admin-server</module>
