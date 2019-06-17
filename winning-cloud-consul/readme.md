@@ -141,7 +141,6 @@ consul agent -dev
 
 创建一个工程consul-provider，在工程的pom文件引入以下依赖，包括consul-discovery的起步依赖，该依赖是spring cloud consul用来向consul 注册和发现服务的依赖，采用REST API的方式进行通讯。另外加上web的起步依赖，用于对外提供REST API。代码如下：
 
-创建一个工程consul-provider，在工程的pom文件引入以下依赖，包括consul-discovery的起步依赖，该依赖是spring cloud consul用来向consul 注册和发现服务的依赖，采用REST API的方式进行通讯。另外加上web的起步依赖，用于对外提供REST API。代码如下：
 
 ```xml
 <dependency>
@@ -365,7 +364,7 @@ public class FooBarController {
 启动consul-provider工程，在浏览器上访问http://localhost:8081/foo，页面显示bar1。然后
 在网页上访问consul的KV存储的管理界面，即http://localhost:8500/ui/dc1/kv，修改config/consul-provider:dev/data的值，修改后的值如下：
 
-```java
+```yaml
 foo:
   bar: bar2
 server: 
