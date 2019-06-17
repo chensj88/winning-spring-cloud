@@ -17,4 +17,8 @@
         spring cloud consul
          服务注册与发现
     </description>
+    <modules>
+        <module>winning-consul-provider</module>
+        <module>winning-consul-customer</module>
+    </modules>
 </project>
