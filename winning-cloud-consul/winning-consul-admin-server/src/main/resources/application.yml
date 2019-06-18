@@ -1,0 +1,60 @@
+server:
+  port: 9000
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+spring:
+  application:
+    name: consul-admin-server
+  cloud:
+    consul:
+      host: 192.168.31.59
+      port: 8500
+      discovery:
+        # 标记
+        tags: version=1.0,author=devops, ${spring.application.name}
+        # 是否注册服务 设置不需要注册到 consul 中
+        register: true
+        # 配置 Consul 健康检查频率，也就是心跳频率
+        health-check-interval: 5s
+        # 配置 Spring Boot服务的主机地址
+        hostname: 192.168.31.59
+        # Consul 注册的服务名称
+        service-name: ${spring.application.name}
+        # Consul 注册服务 ID
+        instance-id: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        # 健康检查网址
+        health-check-url: http://${spring.cloud.consul.discovery.hostname}:${server.port}/actuator/health
+        # path
+        health-check-path: /actuator/health
+  boot:
+    admin:
+      discovery:
+        # 过滤 consul服务
+        ignored-services: consul
+# 监控配置
+management:
+  #server:
+  # 监控服务页面端口
+  #port: 8088
+  endpoints:
+    web:
+      # 默认监控前缀
+      #      base-path: /monitor
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+    health:
+      show-details: always
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+logging:
+  file: "logs/boot-admin-sample.log"

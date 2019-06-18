@@ -20,5 +20,6 @@
     <modules>
         <module>winning-consul-provider</module>
         <module>winning-consul-customer</module>
+        <module>winning-consul-admin-server</module>
     </modules>
 </project>
