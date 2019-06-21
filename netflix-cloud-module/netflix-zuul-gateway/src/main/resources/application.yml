@@ -1,0 +1,87 @@
+server:
+  port: 5000
+spring:
+  application:
+    name: netflix-zuul-gateway
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 10
+    health-check-url-path: /actuator/health
+    #添加eureka.instance.metadata-map.user.name和eureka.instance.metadata-map.user.name 否则在安全模式下无法注册
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    healthcheck:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false
+  # 解决zipkin server UI报错问题
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+# 定义路由信息
+zuul:
+  routes:
+    hiapi:
+      path: /api/**
+      serviceId: netflix-eureka-client
+    ribbonapi:
+      path: /rapi/**
+      serviceId: netflix-ribbon-client
+    feignapi:
+      path: /fapi/**
+      serviceId: netflix-openfeign-client
+  host:
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+    max-total-connections: 500
+# 熔断器 Hystrix
+hystrix:
+  command:
+    # 默认熔断器处理请求
+    default:
+      excution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeout-in-milliseconds: 60000
+    # 特定的熔断器
+    ribbonapi:
+      excution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeout-in-milliseconds: 70000
+# 配置失效时间
+ribbonapi:
+  ribbon:
+    ConnectTimeout: 1000
+    ReadTimeout: 30000
+    MaxTotalHttpConnections: 5000
+    MaxConnectionsPerHost: 1000

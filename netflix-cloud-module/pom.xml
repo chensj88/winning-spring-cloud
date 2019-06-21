@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>winning-spring-cloud</artifactId>
+        <groupId>com.winning.devops</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>netflix-cloud-module</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <!--netflix eureka 注册中心-->
+        <module>netflix-eureka-server</module>
+        <!--Netflix Eureka 客户端，服务提供者-->
+        <module>netflix-eureka-client</module>
+        <!--Netflix Eureka 客户端 Ribbon客户端 Hystrix集成
+         注意 在Hystrix使用的时候注意url：
+         http://localhost:8763/hystrix
+         监控的url是： http://localhost:8763/actuator/hystrix.stream
+         spring boot 2.x 监控都是在/actuator下面
+        -->
+        <module>netflix-ribbon-client</module>
+        <module>netflix-open-feign</module>
+        <module>netflix-turbine-monitor</module>
+        <module>netflix-zuul-gateway</module>
+    </modules>
+
+
+</project>

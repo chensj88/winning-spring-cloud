@@ -1,0 +1,51 @@
+server:
+  port: 8765
+spring:
+  application:
+    name: netflix-turbine-monitor
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 10
+    health-check-url-path: /actuator/health
+    #添加eureka.instance.metadata-map.user.name和eureka.instance.metadata-map.user.name 否则在安全模式下无法注册
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    healthcheck:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: false
+  # 解决zipkin server UI报错问题
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+
+turbine:
+  aggregator:
+    cluster-config: default
+  app-config: netflix-openfeign-client,netflix-ribbon-client
+  cluster-name-expression: new String("default")
