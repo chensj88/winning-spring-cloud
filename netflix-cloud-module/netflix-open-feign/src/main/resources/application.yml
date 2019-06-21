@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: netflix-openfeign-client
+  boot:
+    admin:
+      client:
+        url: http://localhost:9000
 eureka:
   instance:
     hostname: 127.0.0.1

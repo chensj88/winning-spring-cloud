@@ -57,6 +57,7 @@
         <module>winning-cloud-sleuth</module>
         <module>winning-cloud-consul</module>
         <module>netflix-cloud-module</module>
+        <module>boot-admin-module</module>
     </modules>
 
     <dependencies>
