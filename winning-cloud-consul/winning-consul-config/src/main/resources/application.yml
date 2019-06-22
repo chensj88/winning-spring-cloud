@@ -1,8 +1,8 @@
 server:
-  port: 8765
+  port: 8767
 spring:
   application:
-    name: consul-customer
+    name: consul-config
   cloud:
     consul:
       host: 192.168.31.59
@@ -15,6 +15,8 @@ spring:
         health-check-interval: 5s
         health-check-url: http://${spring.cloud.consul.discovery.hostname}:${server.port}/actuator/health
         health-check-path: /actuator/health
+  profiles:
+    active: dev
   boot:
     admin:
       client:

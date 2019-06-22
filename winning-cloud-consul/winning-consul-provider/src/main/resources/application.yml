@@ -11,7 +11,7 @@ spring:
         service-name: ${spring.application.name}
         tags: version=1.0,author=winning devops, ${spring.application.name}
         register: true
-        hostname: 102.168.31.59
+        hostname: 192.168.31.59
         health-check-interval: 5s
         health-check-url: http://${spring.cloud.consul.discovery.hostname}:${server.port}/actuator/health
         health-check-path: /actuator/health
