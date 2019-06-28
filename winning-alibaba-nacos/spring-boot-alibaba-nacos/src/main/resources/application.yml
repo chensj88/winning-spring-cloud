@@ -1,0 +1,37 @@
+server:
+  port: 8300
+# 服务名称(服务注册到eureka名称)--服务注册到注册中心的名称
+spring:
+  application:
+    name: spring-boot-alibaba-nacos-client
+# 监控配置
+management:
+  #  server:
+  #      # 监控服务页面端口
+  #    port: ${server.port}
+  endpoints:
+    web:
+      # 默认监控前缀
+      #      base-path: /actuator
+      exposure:
+        # 包含端点
+        include: "*"
+  # 单个端点设置
+  endpoint:
+    shutdown:
+      enabled: false
+info:
+  app:
+    encoding: UTF-8
+    java:
+      source: 1.8
+      target: 1.8
+    head: ${spring.application.name}
+    body: Welcome, this is ${spring.application.name} @ ${server.port}
+nacos:
+  # 启动配置管理
+  config:
+    server-addr: 192.168.31.96:8848
+  # 启动服务发现
+  discovery:
+    server-addr: 192.168.31.96:8848
