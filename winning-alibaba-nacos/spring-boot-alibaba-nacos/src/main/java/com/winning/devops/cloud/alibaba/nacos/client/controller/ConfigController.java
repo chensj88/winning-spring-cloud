@@ -1,4 +1,4 @@
-package com.winning.devops.cloud.alibaba.nacos.client;
+package com.winning.devops.cloud.alibaba.nacos.client.controller;
 
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import org.springframework.stereotype.Controller;
@@ -11,16 +11,38 @@ import java.util.Map;
 
 /**
  * @author chensj
- * @title
+ * @title 从Nacos 配置中心中读取配置信息
  * @project winning-spring-cloud
  * @package com.winning.devops.cloud.alibaba.nacos.client
  * @date 2019-06-28 22:26
  * 通过调用 Nacos Open API 向 Nacos server 发布配置：dataId 为example，内容为useLocalCache=true
  * curl -X POST "http://127.0.0.1:8848/nacos/v1/cs/configs?dataId=example&group=DEFAULT_GROUP&content=useLocalCache=true"
+useLocalCache=true
+spring.nacos.test=从Nacos 配置中心读取配置信息
+spring.datasource.type=mysql
+spring.datasource.drive-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://192.168.31.96:3306/nacos?useSSL=false
+spring.datasource.username=root
+spring.datasource.password=123456
+ * 测试网址： curl -X GET "http://localhost:8300/config/get"
+ *
+ * {
+ *     "password":"123456",
+ *     "useLocalCache":true,
+ *     "test":"从Nacos 配置中心读取配置信息",
+ *     "driverClassName":"com.mysql.jdbc.Driver",
+ *     "type":"mysql",
+ *     "url":"jdbc:mysql://192.168.31.96:3306/nacos?useSSL=false",
+ *     "username":"root"
+ * }
+ *
  */
 @Controller
 @RequestMapping("config")
 public class ConfigController {
+    /**
+     * 通过 Nacos 的 @NacosValue 注解设置属性值
+     */
     @NacosValue(value = "${useLocalCache:false}", autoRefreshed = true)
     private boolean useLocalCache;
     @NacosValue(value = "${spring.nacos.test:'这是一个测试'}", autoRefreshed = true)

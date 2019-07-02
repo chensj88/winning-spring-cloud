@@ -3,26 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>winning-spring-cloud</artifactId>
+        <artifactId>winning-alibaba-nacos</artifactId>
         <groupId>com.winning.devops</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>winning-alibaba-nacos</artifactId>
-
     <packaging>pom</packaging>
 
+    <artifactId>nacos-spring-cloud-discovery</artifactId>
+
     <description>
-        spring cloud + alibaba nacos
-        https://nacos.io/zh-cn/index.html
+        spring cloud nacos 服务注册
     </description>
+
     <modules>
-        <!--spring boot 使用nacos配置中心-->
-        <module>spring-boot-alibaba-nacos</module>
-        <!--spring cloud 使用nacos配置中心-->
-        <module>nacos-spring-cloud-config</module>
-        <!--spring cloud nacos 服务注册于发现-->
-        <module>nacos-spring-cloud-discovery</module>
+        <module>nacos-spring-cloud-provider</module>
+        <module>nacos-spring-cloud-customer</module>
     </modules>
+
 </project>

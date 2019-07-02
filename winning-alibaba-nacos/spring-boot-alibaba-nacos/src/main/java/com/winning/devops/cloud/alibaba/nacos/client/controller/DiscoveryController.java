@@ -1,4 +1,4 @@
-package com.winning.devops.cloud.alibaba.nacos.client;
+package com.winning.devops.cloud.alibaba.nacos.client.controller;
 
 import com.alibaba.nacos.api.annotation.NacosInjected;
 import com.alibaba.nacos.api.exception.NacosException;
